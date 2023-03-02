@@ -23,11 +23,6 @@ let notes = [
     important: true,
   },
 ]
-
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>')
-})
-
 app.get('/api/notes', (req, res) => {
   res.json(notes)
 })
@@ -52,6 +47,28 @@ const generateId = () => {
   const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0
   return maxId + 1
 }
+
+app.put('/api/notes/:id', (request, response) => {
+  const id = Number(request.params.id)
+  const note = notes.find((note) => note.id === id)
+
+  if (!note) {
+    return response.status(404).json({
+      error: 'note not found',
+    })
+  }
+
+  const body = request.body
+  const updatedNote = {
+    ...note,
+    content: body.content || note.content,
+    important: body.important || note.important,
+  }
+
+  notes = notes.map((note) => (note.id !== id ? note : updatedNote))
+
+  response.json(updatedNote)
+})
 
 app.post('/api/notes', (request, response) => {
   const body = request.body
