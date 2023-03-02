@@ -23,15 +23,12 @@ app.get('/api/notes/:id', (request, response) => {
   })
 })
 
-app.delete('/api/notes/:id', (request, response) => {
+app.delete('/api/notes/:id', (request, response, next) => {
   Note.findByIdAndRemove(request.params.id)
-    .then(() => {
+    .then((result) => {
       response.status(204).end()
     })
-    .catch((error) => {
-      console.log(error)
-      response.status(500).end()
-    })
+    .catch((error) => next(error))
 })
 
 app.put('/api/notes/:id', (request, response) => {
