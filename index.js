@@ -62,7 +62,7 @@ app.put('/api/notes/:id', (request, response) => {
   const updatedNote = {
     ...note,
     content: body.content || note.content,
-    important: body.important || note.important,
+    important: body.important,
   }
 
   notes = notes.map((note) => (note.id !== id ? note : updatedNote))
